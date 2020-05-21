@@ -1,0 +1,3 @@
+由于springmvc在返回string类型数据时，走的是StringHttpMessageConverter 消息转换器，我们普通接口走的是JSON转换器，所在一般情况下不建议直接返回String，特殊情况，请参考以下例子
+
+![return_string](images/return_string.png)
