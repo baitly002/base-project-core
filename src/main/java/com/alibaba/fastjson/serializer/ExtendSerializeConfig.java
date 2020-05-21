@@ -1,8 +1,8 @@
 package com.alibaba.fastjson.serializer;
 
 import com.dashu.lazyapidoc.annotation.Doc;
-import org.basecode.core.criterion.annotations.DateRaw;
-import org.basecode.core.criterion.annotations.DictField;
+import org.basecode.common.criterion.annotations.DateRaw;
+import org.basecode.common.criterion.annotations.DictField;
 
 import java.lang.reflect.Field;
 

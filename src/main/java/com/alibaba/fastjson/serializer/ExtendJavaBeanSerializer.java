@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.util.FieldInfo;
 import com.alibaba.fastjson.util.TypeUtils;
-import org.basecode.core.dict.LocalCache;
-import org.basecode.core.criterion.annotations.DateRaw;
-import org.basecode.core.criterion.annotations.DictField;
-import org.basecode.core.util.StringUtils;
+import org.basecode.common.dict.LocalCache;
+import org.basecode.common.criterion.annotations.DateRaw;
+import org.basecode.common.criterion.annotations.DictField;
+import org.basecode.common.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
