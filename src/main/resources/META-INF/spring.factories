@@ -1,0 +1,11 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.basecode.core.config.base.CommonConfig,\
+org.basecode.core.config.base.DruidDataSourceConfig,\
+org.basecode.core.config.base.MybatisConfig,\
+org.basecode.core.config.base.MybatisPlusConfig,\
+org.basecode.core.config.base.RedissonConfiguration,\
+org.basecode.core.config.base.RestTemplateConfig,\
+org.basecode.core.config.base.WebBeanDefinitionRegistryPostProcessor,\
+org.basecode.core.config.base.WebBeanFactoryPostProcessor,\
+org.basecode.core.config.base.WebBeanPostProcessor,\
+org.basecode.core.config.web.WebMvcAutoConfig

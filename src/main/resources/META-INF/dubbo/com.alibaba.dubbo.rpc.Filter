@@ -1,0 +1,1 @@
+dubboExceptionFilter=org.basecode.common.criterion.exception.DubboExceptionFilter

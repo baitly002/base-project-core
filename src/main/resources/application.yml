@@ -1,0 +1,80 @@
+server:
+  port: 8080
+spring:
+  session:
+     store-type: redis
+     timeout: 1800
+  application:
+    name: basecode-common
+  profiles:
+    active: dev
+  basecode:
+    security:
+      paths:
+        - /**
+      excludes:
+        - /gateway/login
+        - /gateway/test/**
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://localhost:3306/repair?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: admin123
+      min-idle: 5
+      max-pool-prepared-statement-per-connection-size: -1
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      max-active: 20
+      validation-query: SELECT 'x'
+      use-global-data-source-stat: true
+      filters: stat,wall,log4j
+      max-wait: 60000
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      test-on-borrow: false
+      pool-prepared-statements: false
+      initial-size: 5
+      min-evictable-idle-time-millis: 300000
+      test-on-return: false
+#  redis:
+#    cluster:
+#      nodes:  192.168.2.208:7010,192.168.2.208:7011,192.168.2.208:7012
+#      max-redirects: 3
+#      timeout: 6000
+#    lettuce:
+#      pool:
+#        max-idle: 8
+#        min-idle: 0
+#        max-active: 8
+#        max-wait: 10000
+#      shutdown-timeout: 100
+debug: false
+#pagehelper:
+#  supportMethodsArguments: true
+#  reasonable: true
+#  helperDialect: mysql
+#  params: count=countSql
+#mybatis:
+#  configuration:
+#    cache-enabled: true
+#  mapper-locations: classpath*:/mybaits/*Mapper.xml
+#  type-aliases-package: org.basecode
+logging:
+  level:
+    com:
+      alibaba: error
+      fasterxml: error
+      github: info
+      google: error
+    org:
+      apache: info
+      mybatis: debug
+      springframework:
+        web: error
+        bean: error
+        transaction: error
+      hibernate: error
+    io:
+       netty: error
+       lettuce: error

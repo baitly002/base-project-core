@@ -1,0 +1,83 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "name": "spring.basecode.nacos",
+      "type": "org.basecode.common.spring.config.NacosConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "defaultValue": "UTF-8",
+      "name": "spring.basecode.nacos.encode",
+      "description": "编码",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "name": "spring.basecode.nacos.ext-config",
+      "description": "子集(数组)，属性参照同级",
+      "type": "java.util.List<org.basecode.common.spring.config.NacosConfigProperties.Config>"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "defaultValue": "yaml",
+      "name": "spring.basecode.nacos.file-extension",
+      "description": "文件类型，仅支持properties;yaml;yml;json",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "defaultValue": "DEFAULT_GROUP",
+      "name": "spring.basecode.nacos.group",
+      "description": "所属组",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "name": "spring.basecode.nacos.data-id",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "name": "spring.basecode.nacos.namespace",
+      "description": "命名空间",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "defaultValue": "true",
+      "name": "spring.basecode.nacos.refresh",
+      "description": "是否实时刷新",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "name": "spring.basecode.nacos.server-addr",
+      "description": "配置中心地址，必须指定端口号",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "defaultValue": 3000,
+      "name": "spring.basecode.nacos.timeout",
+      "description": "连接获取配置超时时间",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "defaultValue": "DEFAULT_GROUP",
+      "name": "spring.basecode.nacos.dict.group",
+      "description": "字典所属组",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "org.basecode.common.spring.config.NacosConfigProperties",
+      "name": "spring.basecode.nacos.dict.data-id",
+      "description": "字典dataId",
+      "type": "java.lang.String"
+    }
+  ]
+}

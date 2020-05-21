@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，如果设置为WARN，则低于WARN的信息都不会输出 -->
+<!-- scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true -->
+<!-- scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration  scan="true" scanPeriod="10 seconds">
+
+	<!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
+	<springProperty scope="context" name="springAppName" source="spring.application.name"/>
+	<!-- 该节点会读取Environment中配置的值，在这里我们读取application.yml中的值 -->
+	<springProperty scope="context" name="bootstrapServers" source="spring.kafka.bootstrap-servers" defaultValue="10.1.4.48:9092"/>
+
+	<contextName>logback</contextName>
+	<!-- name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。 -->
+	<property name="log.path" value="/data/logs/${springAppName}" />
+
+	<!-- 彩色日志 -->
+	<!-- 彩色日志依赖的渲染类 -->
+	<conversionRule conversionWord="IpAddressConvert" converterClass="org.basecode.common.logger.IpAddressConvert" />
+	<conversionRule conversionWord="TraceIdConvert" converterClass="org.apache.skywalking.apm.toolkit.log.logback.v1.x.LogbackPatternConverter" />
+	<conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+	<conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+	<conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+	<!-- 彩色日志格式 -->
+	<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %IpAddressConvert  %TraceIdConvert %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+
+	<!--输出到控制台-->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>debug</level>
+		</filter>
+		<encoder>
+			<Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+			<!-- 设置字符集 -->
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+
+	<!--输出到文件-->
+
+	<!-- 时间滚动输出 level为 DEBUG 日志 -->
+	<appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 正在记录的日志文件的路径及文件名 -->
+		<file>${log.path}/log_debug.log</file>
+		<!--日志文件输出格式-->
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>UTF-8</charset> <!-- 设置字符集 -->
+		</encoder>
+		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 日志归档 -->
+			<fileNamePattern>${log.path}/log-debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!--日志文件保留天数-->
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<!-- 此日志文件只记录debug级别的 -->
+		<!-- <filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>debug</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter> -->
+	</appender>
+
+	<logger name="org.apache.kafka" level="info"/>
+	<logger name="com.internetitem.logback" level="error"/>
+
+	<!-- <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashAccessTcpSocketAppender">
+        <destination>192.168.1.17:5044</destination>
+        <encoder  class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%tid] [%thread]  %-5level %logger{50} - %msg%n</pattern>
+			</layout>
+		</encoder>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+        	<jsonFactoryDecorator class="net.logstash.logback.decorate.CharacterEscapesJsonFactoryDecorator">
+                <escape>
+                    <targetCharacterCode>10</targetCharacterCode>
+                    <escapeSequence>\u2028</escapeSequence>
+                </escape>
+            </jsonFactoryDecorator>
+			<providers>
+				<provider class="org.basecode.common.config.logstash.TraceIdProvider"/>
+				<provider class="org.basecode.common.config.logstash.RemoteIpProvider"/>
+				<timestamp/>
+				<version/>
+				<message/>
+				<loggerName/>
+				<threadName/>
+				<logLevel/>
+				<stackTrace/>
+				<callerData/>
+
+				<pattern>
+                    <pattern>
+                        {
+                        "serviceName": "${springAppName:-}",
+                        "pid": "${PID:-}"
+                        }
+                    </pattern>
+                </pattern>
+			</providers>
+		</encoder>
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+    </appender> -->
+
+	<appender name="KAFKA" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+		<encoder  class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<charset>UTF-8</charset>
+			<layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+				<pattern>
+					{
+					"serviceName": "${springAppName:-}",
+					"pid": "${PID:-}",
+					"remoteIp":"%IpAddressConvert",
+					"@timestamp":"%date{yyyy-MM-dd HH:mm:ss}",
+					"traceId":"%tid",
+					"treadName":"%thread",
+					"logLevel":"%-5level",
+					"loggerName":"%logger{50}",
+					"message":"%msg"
+					}
+				</pattern>
+			</layout>
+		</encoder>
+		<topic>log-log</topic>
+		<!-- we don't care how the log messages will be partitioned  -->
+		<keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy" />
+
+		<!-- use async delivery. the application threads are not blocked by logging -->
+		<deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy" />
+
+		<!-- each <producerConfig> translates to regular kafka-client config (format: key=value) -->
+		<!-- producer configs are documented here: https://kafka.apache.org/documentation.html#newproducerconfigs -->
+		<!-- bootstrap.servers is the only mandatory producerConfig -->
+		<producerConfig>bootstrap.servers=${bootstrapServers}</producerConfig>
+		<!-- don't wait for a broker to ack the reception of a batch.  -->
+		<producerConfig>acks=0</producerConfig>
+		<!-- wait up to 1000ms and collect log messages before sending them as a batch -->
+		<producerConfig>linger.ms=1000</producerConfig>
+		<!-- even if the producer buffer runs full, do not block the application but start to drop messages -->
+		<producerConfig>max.block.ms=0</producerConfig>
+		<!-- define a client-id that you use to identify yourself against the kafka broker -->
+		<producerConfig>client.id=${springAppName}-logback-relaxed</producerConfig>
+
+	</appender>
+	<!--<appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">-->
+	<appender name="ELASTIC" class="org.basecode.common.logger.elasticsearch.ElasticsearchAppender">
+		<url>http://10.201.62.30:9200/_bulk</url>
+		<index>logs-${springAppName}-%date{yyyy-MM-dd}</index>
+		<type>tester</type>
+		<!--<loggerName>es-logger</loggerName>--> <!-- optional -->
+		<!--<errorLoggerName>es-error-logger</errorLoggerName>--> <!-- optional -->
+		<connectTimeout>30000</connectTimeout> <!-- optional (in ms, default 30000) -->
+		<errorsToStderr>false</errorsToStderr> <!-- optional (default false) -->
+		<includeCallerData>false</includeCallerData> <!-- optional (default false) -->
+		<logsToStderr>false</logsToStderr> <!-- optional (default false) -->
+		<maxQueueSize>104857600</maxQueueSize> <!-- optional (default 104857600) -->
+		<maxRetries>3</maxRetries> <!-- optional (default 3) -->
+		<readTimeout>30000</readTimeout> <!-- optional (in ms, default 30000) -->
+		<sleepTime>250</sleepTime> <!-- optional (in ms, default 250) -->
+		<rawJsonMessage>false</rawJsonMessage> <!-- optional (default false) -->
+		<includeMdc>true</includeMdc> <!-- optional (default false) -->
+		<maxMessageSize>1000</maxMessageSize> <!-- optional (default -1 -->
+		<authentication class="com.internetitem.logback.elasticsearch.config.BasicAuthentication" /> <!-- optional -->
+		<properties>
+			<property>
+				<name>serviceName</name>
+				<value>${springAppName:-}</value>
+			</property>
+			<property>
+				<name>pid</name>
+				<value>${PID:-}</value>
+			</property>
+			<property>
+				<name>remoteIp</name>
+				<value>%IpAddressConvert</value>
+			</property>
+			<property>
+				<name>traceId</name>
+				<value>%tid</value>
+			</property>
+			<property>
+				<name>treadName</name>
+				<value>%thread</value>
+			</property>
+			<property>
+				<name>logLevel</name>
+				<value>%-5level</value>
+			</property>
+			<property>
+				<name>loggerName</name>
+				<value>%logger{50}</value>
+			</property>
+			<property>
+				<name>stacktrace</name>
+				<value>%ex</value>
+			</property>
+			<!--<property>
+				<name>host</name>
+				<value>${HOSTNAME}</value>
+				<allowEmpty>false</allowEmpty>
+			</property>
+			<property>
+				<name>severity</name>
+				<value>%level</value>
+			</property>
+			<property>
+				<name>thread</name>
+				<value>%thread</value>
+			</property>
+			<property>
+				<name>stacktrace</name>
+				<value>%ex</value>
+			</property>
+			<property>
+				<name>logger</name>
+				<value>%logger</value>
+			</property>
+			-->
+		</properties>
+		<headers>
+			<header>
+				<name>Content-Type</name>
+				<value>application/json</value>
+			</header>
+		</headers>
+	</appender>
+
+	<root level="debug">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="DEBUG_FILE" />
+		<!--<appender-ref ref="KAFKA" />-->
+		<appender-ref ref="ELASTIC" />
+	</root>
+
+	<!--生产环境:输出到文件-->
+	<!--<springProfile name="pro">-->
+	<!--<root level="info">-->
+	<!--<appender-ref ref="CONSOLE" />-->
+	<!--<appender-ref ref="DEBUG_FILE" />-->
+	<!--<appender-ref ref="INFO_FILE" />-->
+	<!--<appender-ref ref="ERROR_FILE" />-->
+	<!--<appender-ref ref="WARN_FILE" />-->
+	<!--</root>-->
+	<!--</springProfile>-->
+
+</configuration>
