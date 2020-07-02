@@ -29,7 +29,7 @@
         <dom4j.version>2.1.1</dom4j.version>
         <mybatis.version>3.4.2</mybatis.version>
         <javaparser.version>3.15.5</javaparser.version>
-        <mysql.version>8.0.15</mysql.version>
+        <mysql.version>8.0.16</mysql.version>
         <jaxen.version>1.1.6</jaxen.version>
         <spring.redis.version>2.2.2.RELEASE</spring.redis.version>
         <zkclient.version>0.11</zkclient.version>
